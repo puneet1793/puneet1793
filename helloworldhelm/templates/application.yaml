@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: helloworlddemo
+  name: {{ .Values.helloworlddemo.name }}
+spec:
+  replicas: {{ .Values.helloworlddemo.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.helloworlddemo.name }}
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{ .Values.helloworlddemo.name }}
+    spec:
+      containers:
+      - image: {{ .Values.helloworlddemo.image }}
+        name: puneetdemo
+        resources: {}
+status: {}
+

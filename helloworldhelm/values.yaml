@@ -1,0 +1,11 @@
+service:
+ name: helloworlddemo
+ type: LoadBalancer
+ port: 80
+ targetPort: 5000
+helloworlddemo:
+ name: helloworlddemo
+ replicas: 3
+ image: puneetpahuja1793/puneetdemo
+ imagePullPolicy: Always
+  
