@@ -1,0 +1,15 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+          storageclass.kubernetes.io/is-default-class: "true"
+  name: gp2-encrypted
+parameters:
+  fsType: ext4
+  type: gp2
+  encrypted: "true"
+  kmsKeyId: 2158a7f3-a4f3-4806-856f-2bae8f475d05
+provisioner: kubernetes.io/aws-ebs
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+
