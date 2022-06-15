@@ -1,0 +1,60 @@
+apiVersion: nsbootstrapoperator.fmr.com/v1alpha1
+kind: Nsgroup
+metadata:
+  labels:
+    app: pl203363 # Can add labels here in any format if desired
+  # CRD is now cluster scope resource, so no need to pass namespace, namespace attribute will be ignore if set
+  name: nsgroup-sample # name of nsgroup CRD
+spec:
+  appEmail: a668977@fmr.com # owner of the nsgroup (usually cluster admin)
+  appOwner: a668977
+  rbac:
+    # accessLevel can have two values admin, readonly
+    # see permissions that members of admin group will have here:
+    # https://itec-stash.fmr.com/projects/PR110352/repos/pr110352-eksmgr_helmchart_rolesetup/browse/templates/namespace-admin-clusterrole.yaml
+    # see permissions that members of readonly group will have here:
+    # https://itec-stash.fmr.com/projects/PR110352/repos/pr110352-eksmgr_helmchart_rolesetup/browse/templates/eks-opsreadonly-clusterrole.yaml
+    - accessLevel: admin
+      iamRole:
+        EKS_NS_TestGroup # Name of the IAM role, and corresponding AD Group, that will be created (e.g. gRestricted_AWS_12345678_EKS_NS_TestGroup)
+        # Must begin with EKS_NS_
+      members: # List of users accounts or service accouts which should have to access the namespaces
+        - DMN1\a668977
+      owners:
+        primary: DMN1\a668977
+        secondary: DMN1\a668977
+  namespaces: # list of namespaces to be created
+    - name: fda-eks-nsgroup # name of the namespace intended to be created
+    - name: fda-eks-ns
+  # Optional. Will be applied to every namespace if specified
+  resourceQuota:
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: custom-resource-quota
+    spec:
+      hard:
+        pods: 30
+        memory: "5Gi"
+        cpu: 3
+  # Optional. Will be applied to every namespace if specified
+  limitRange:
+    apiVersion: v1
+    kind: LimitRange
+    metadata:
+      name: custom-limit-range
+    spec: # if limitRange is being used, don't leave spec section as empty and nsbootstrap operator validations(which are part of 1.16-fideks-1.0.0) will block namespace creation.
+      limits:
+        - type: Container
+          max:
+            cpu: "800m"
+            memory: "1Gi"
+          min:
+            cpu: "100m" # min cpu cannot be higher than 500m because vault init container needs atleast 500m CPU
+            memory: "32Mi" # min memory cannot be higher than 64Mi because vault init container needs atleast 64Mi Memory
+          default:
+            cpu: "700m"
+            memory: "900Mi"
+          defaultRequest:
+            cpu: "110m"
+            memory: "111Mi"
