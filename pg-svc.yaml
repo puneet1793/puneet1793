@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-svc    ##This can be any name you define for your mongo service
+  namespace: fda-eks-ns
+  labels:
+     environment: dev
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+  selector:
+     environment: dev
+     role: pg
