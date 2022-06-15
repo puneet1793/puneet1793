@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pg
+  namespace: fda-eks-ns
+spec:
+  selector:
+    matchLabels:
+      environment: dev
+      applicationid: ap127322
+  serviceName: "pg-svc"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        environment: dev
+        applicationid: ap127322
+    spec:
+      containers:
+      - name: pg
+        image: fcr-nonprod.fmr.com/postgres:9.6
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "test1234"
+        ports:
+          - containerPort: 5432
+      imagePullSecrets:
+      - name: regcred            
