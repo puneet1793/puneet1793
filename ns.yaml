@@ -1,0 +1,51 @@
+apiVersion: tenancymgr.ecc.fmr.com/v1alpha3
+kind: Nsgroup
+metadata:
+  labels:
+    app: pl203363
+  name: fda-eks-nsgroup99
+spec:
+  notification:
+    email:
+    - a668977@fmr.com
+  tenants:
+  - accessLevel: admin
+    groupName: gRestricted_AWS_652292955823_EKS_NS_FDAEKS_Admin
+    iamRole:  EKS_NS_FDAEKS_Admin
+    members:
+    - a668977 
+    owner:
+      primary: a668977
+      secondary: a715831
+
+  namespaces:
+  - name: fda-eks-ns
+    labels:
+      app: fda-eks-ns
+    annotations:
+      applicationid: pl203363
+
+  resourceQuota:
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: fda-eks-resource-quota
+    spec:
+      hard:
+        pods: 30
+        memory: "5Gi"
+        cpu: 3
+  limitRange:
+    apiVersion: v1
+    kind: LimitRange
+    metadata:
+      name: fda-eks-custom-limit-range
+    spec:
+      limits:
+        - type: Container
+          default:
+            cpu: "500m"
+            memory: "500Mi"
+          defaultRequest:
+            cpu: "110m"
+            memory: "111Mi"
